@@ -45,6 +45,14 @@ h1 {
   box-shadow: 0 0 0 1px rgba(26, 115, 232, 0.2);
 }
 
+/* Highlighted search matches */
+.highlight {
+  background-color: rgba(255, 230, 0, 0.5);
+  border-radius: 2px;
+  padding: 0 1px;
+  font-weight: 500;
+}
+
 /* Prompts list styles */
 .prompts-list {
   flex: 1;

@@ -51,6 +51,28 @@ const App: React.FC = () => {
     return new Date(timestamp).toLocaleString()
   }
 
+  // Highlight search matches in the text
+  const highlightSearchMatches = (text: string, query: string): React.ReactNode => {
+    if (!query.trim()) {
+      return text
+    }
+
+    const parts = text.split(new RegExp(`(${escapeRegExp(query)})`, 'gi'))
+
+    return parts.map((part, index) => {
+      // Check if this part matches the query (case-insensitive)
+      if (part.toLowerCase() === query.toLowerCase()) {
+        return <span key={index} className='highlight'>{part}</span>
+      }
+      return part
+    })
+  }
+
+  // Escape special characters for regex
+  const escapeRegExp = (string: string): string => {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  }
+
   // Copy prompt text to clipboard
   const copyToClipboard = async (text: string) => {
     try {
@@ -133,7 +155,7 @@ const App: React.FC = () => {
               <div
                 className={`prompt-text ${scrollablePrompts[prompt.id] ? 'scrollable' : ''}`}
               >
-                {prompt.text}
+                {highlightSearchMatches(prompt.text, searchQuery)}
               </div>
               <div className='prompt-meta'>
                 <span className='prompt-date'>{formatDate(prompt.timestamp)}</span>
