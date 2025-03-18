@@ -17,6 +17,7 @@ A browser extension that helps you collect, organize, and reuse text selections 
 - **📋 Save Text Selections**: Right-click on any selected text and choose "Save to Prompt Library"
 - **🔍 Smart Search**: Find your prompts quickly with real-time filtering
 - **📋 One-Click Copy**: Click any prompt to instantly copy it to your clipboard
+- **🗑️ Easy Deletion**: Remove prompts you no longer need with the delete button
 - **🔗 Source Tracking**: Each prompt remembers where you found it
 
 ## 📥 Installation
@@ -68,6 +69,12 @@ The extension is available for both Chrome and Firefox browsers.
 4. **Copy a prompt**:
    - Click on any prompt to copy it to your clipboard
    - A "Copied!" confirmation will appear
+
+5. **Delete a prompt**:
+   - In the bottom right corner of the prompt, click the trash icon
+   - A confirmation dialog will appear asking "Delete?"
+   - Click "Yes" to permanently remove the prompt or "No" to cancel
+   - A confirmation message will appear when deletion is complete
 
 ## 🛠️ Development Setup
 
@@ -127,3 +134,9 @@ Please make sure to update tests as appropriate and follow the code style.
 ## 📄 License
 
 This project is licensed under the GNU General Public License v3.0 - see [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html) for details.
+
+---
+
+<div align="center">
+Made with ❤️ by <a href="https://github.com/srcnebo">srcnebo</a>
+</div>
