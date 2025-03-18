@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Prompt } from '../types/Prompt'
 
 const App: React.FC = () => {
@@ -7,7 +7,9 @@ const App: React.FC = () => {
   const [copyStatus, setCopyStatus] = useState<string | null>(null)
   const [deleteStatus, setDeleteStatus] = useState<string | null>(null)
   const [promptToDelete, setPromptToDelete] = useState<string | null>(null)
+  const [scrollablePrompts, setScrollablePrompts] = useState<Record<string, boolean>>({})
 
+  // Load prompts from storage when component mounts
   useEffect(() => {
     loadPrompts()
   }, [])
@@ -25,6 +27,25 @@ const App: React.FC = () => {
   const filteredPrompts = prompts.filter(prompt =>
     prompt.text.toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+  // Check for scrollable content after prompts load or filter changes
+  useEffect(() => {
+    const scrollableState: Record<string, boolean> = {}
+
+    // Use a small delay to ensure the DOM has updated
+    const timer = setTimeout(() => {
+      const promptElements = document.querySelectorAll('.prompt-text')
+      promptElements.forEach((element) => {
+        const id = element.closest('.prompt-item')?.getAttribute('data-prompt-id')
+        if (id) {
+          scrollableState[id] = element.scrollHeight > element.clientHeight
+        }
+      })
+      setScrollablePrompts(scrollableState)
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [prompts, searchQuery, filteredPrompts])
 
   const formatDate = (timestamp: number): string => {
     return new Date(timestamp).toLocaleString()
@@ -105,10 +126,15 @@ const App: React.FC = () => {
           filteredPrompts.map(prompt => (
             <div
               key={prompt.id}
+              data-prompt-id={prompt.id}
               className='prompt-item'
               onClick={() => copyToClipboard(prompt.text)}
             >
-              <div className='prompt-text'>{prompt.text}</div>
+              <div
+                className={`prompt-text ${scrollablePrompts[prompt.id] ? 'scrollable' : ''}`}
+              >
+                {prompt.text}
+              </div>
               <div className='prompt-meta'>
                 <span className='prompt-date'>{formatDate(prompt.timestamp)}</span>
                 {prompt.source && (
