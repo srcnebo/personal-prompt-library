@@ -129,6 +129,49 @@ h1 {
   height: 12px;
 }
 
+/* Delete confirmation styles */
+.delete-confirmation {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+}
+
+.delete-confirmation span {
+  font-size: 11px;
+  color: #666;
+}
+
+.confirm-button, .cancel-button {
+  background: none;
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.confirm-button {
+  border-color: #f44336;
+  color: #f44336;
+}
+
+.confirm-button:hover {
+  background-color: #f44336;
+  color: white;
+}
+
+.cancel-button {
+  border-color: #666;
+  color: #666;
+}
+
+.cancel-button:hover {
+  background-color: #666;
+  color: white;
+}
+
 /* Delete status indicator */
 .delete-status {
   background-color: #f44336;

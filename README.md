@@ -71,8 +71,10 @@ The extension is available for both Chrome and Firefox browsers.
    - A "Copied!" confirmation will appear
 
 5. **Delete a prompt**:
-   - In the bottom right corner of the prompt, click the trash icon to permanently remove the prompt
-   - A confirmation message will appear
+   - In the bottom right corner of the prompt, click the trash icon
+   - A confirmation dialog will appear asking "Delete?"
+   - Click "Yes" to permanently remove the prompt or "No" to cancel
+   - A confirmation message will appear when deletion is complete
 
 ## 🛠️ Development Setup
 
