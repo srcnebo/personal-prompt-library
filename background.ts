@@ -65,3 +65,36 @@ function savePrompt(newPrompt: Prompt): void {
     })
   })
 }
+
+// Function to delete a prompt by ID
+function deletePrompt(promptId: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    // Get existing prompts from storage
+    chrome.storage.local.get(["prompts"], (result) => {
+      const existingPrompts: Prompt[] = result.prompts || []
+
+      // Filter out the prompt with the matching ID
+      const updatedPrompts = existingPrompts.filter(prompt => prompt.id !== promptId)
+
+      // Check if a prompt was actually removed
+      const wasDeleted = existingPrompts.length > updatedPrompts.length
+
+      // Save updated prompts back to storage
+      chrome.storage.local.set({ prompts: updatedPrompts }, () => {
+        console.log(`Prompt ${wasDeleted ? 'deleted' : 'not found'}:`, promptId)
+        resolve(wasDeleted)
+      })
+    })
+  })
+}
+
+// Listen for messages from the popup
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "deletePrompt" && message.promptId) {
+    deletePrompt(message.promptId)
+      .then(wasDeleted => {
+        sendResponse({ success: wasDeleted })
+      })
+    return true // Indicates we will send a response asynchronously
+  }
+})

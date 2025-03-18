@@ -5,15 +5,21 @@ const App: React.FC = () => {
   const [prompts, setPrompts] = useState<Prompt[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [copyStatus, setCopyStatus] = useState<string | null>(null)
+  const [deleteStatus, setDeleteStatus] = useState<string | null>(null)
 
   // Load prompts from storage when component mounts
   useEffect(() => {
+    loadPrompts()
+  }, [])
+
+  // Load prompts from storage
+  const loadPrompts = () => {
     chrome.storage.local.get(['prompts'], (result) => {
       if (result.prompts) {
         setPrompts(result.prompts)
       }
     })
-  }, [])
+  }
 
   // Filter prompts based on search query
   const filteredPrompts = prompts.filter(prompt =>
@@ -41,6 +47,25 @@ const App: React.FC = () => {
     }
   }
 
+
+  const deletePrompt = (e: React.MouseEvent, promptId: string) => {
+
+    e.stopPropagation()
+
+    chrome.runtime.sendMessage({ action: "deletePrompt", promptId }, (response) => {
+      if (response.success) {
+        setPrompts(prevPrompts => prevPrompts.filter(p => p.id !== promptId))
+        setDeleteStatus('Prompt deleted')
+      } else {
+        setDeleteStatus('Error deleting prompt')
+      }
+
+      setTimeout(() => {
+        setDeleteStatus(null)
+      }, 2000)
+    })
+  }
+
   return (
     <div className="app-container">
       <h1>AI Prompt Library</h1>
@@ -61,6 +86,12 @@ const App: React.FC = () => {
         </div>
       )}
 
+      {deleteStatus && (
+        <div className="delete-status">
+          {deleteStatus}
+        </div>
+      )}
+
       <div className="prompts-list">
         {filteredPrompts.length > 0 ? (
           filteredPrompts.map(prompt => (
@@ -77,6 +108,13 @@ const App: React.FC = () => {
                     Source: {new URL(prompt.source).hostname}
                   </span>
                 )}
+                <button
+                  className="delete-button"
+                  onClick={(e) => deletePrompt(e, prompt.id)}
+                  title="Delete prompt"
+                >
+                  <img src="icons/trash-can-regular.svg" alt="Delete" className="trash-icon" />
+                </button>
               </div>
             </div>
           ))
